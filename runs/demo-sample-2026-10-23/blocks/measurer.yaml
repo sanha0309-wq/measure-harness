@@ -1,0 +1,462 @@
+values:
+- id: layout.columns
+  value: 1440 / 240 · 840 · 360
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)
+- id: layout.sidebar
+  value: 240
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>nav:nth-of-type(1)
+- id: layout.content_max
+  value: 960
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)
+- id: layout.page_padding
+  value: 32
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)
+- id: layout.panel
+  value: 360
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>aside:nth-of-type(1)
+- id: type.title_page
+  value: 28 / 36 / 700 / -0.4
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>h1:nth-of-type(1)
+  label: 가상 대시보드
+- id: type.title_section
+  value: 20 / 28 / 600 / normal
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>h2:nth-of-type(1)
+  label: 요약
+- id: type.body
+  value: 15 / 24 / 400 / normal
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>p:nth-of-type(1)
+- id: type.caption
+  value: 13 / 18 / 400 / normal
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)
+  label: 항목 A
+- id: type.button
+  value: 15 / 22 / 600 / normal
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(1)
+  label: 저장
+- id: type.family
+  value: Sample Sans
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)
+- id: color.text
+  value: '#1A1C20 / #5B616E / #A3A9B3'
+  src: dom
+  el:
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>h1:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>nav:nth-of-type(1)>div:nth-of-type(2)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(3)
+- id: color.bg
+  value: '#FFFFFF / #F7F8FA / #EEF0F3'
+  src: dom
+  el:
+  - body:nth-of-type(1)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>nav:nth-of-type(1)
+- id: color.border
+  value: '#E1E4E8'
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>input:nth-of-type(1)
+- id: color.primary
+  value: '#2B6CF6'
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(1)
+  label: 저장
+- id: color.status
+  value: '#1F9D55 / #E8A317 / #D93B3B / #3A7BD5'
+  src: dom
+  el:
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>span:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>span:nth-of-type(2)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>span:nth-of-type(3)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>span:nth-of-type(4)
+- id: space.scale
+  value: 4 / 8 / 12 / 16 / 20 / 24 / 32
+  unit: px
+  src: dom
+  el:
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(3)>div:nth-of-type(1)>div:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>nav:nth-of-type(1)>div:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>aside:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)
+- id: space.card_padding
+  value: 20
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)
+  label: 항목 A
+- id: space.card_gap
+  value: 16
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)
+- id: space.section_gap
+  value: 32
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)
+- id: radius.scale
+  value: 8 / 12 / 20 / 999
+  unit: px
+  src: dom
+  el:
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>span:nth-of-type(1)
+- id: radius.components
+  value: 8 / 8 / 12 / 20
+  unit: px
+  src: dom
+  el:
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>input:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)
+- id: shadow.scale
+  value: rgba(0, 0, 0, 0.06) 0px 1px 2px 0px / rgba(0, 0, 0, 0.12) 0px 8px 24px 0px
+  src: dom
+  el:
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)
+- id: comp.button.height
+  value: 44 / 36
+  unit: px
+  src: dom
+  el:
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(2)
+- id: comp.button.width
+  src: none
+  reason: raw에 min-width가 없고 폭이 글자 길이 따라 버튼마다 다름 (70 · 63.3333 · 85) — 최소 · 고정 폭 근거 없음
+- id: comp.button.padding
+  value: 0 · 20 / 0 · 16
+  unit: px
+  src: dom
+  el:
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(2)
+- id: comp.button.text
+  value: 15 / 22 / 600
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(1)
+  label: 저장
+- id: comp.button.radius
+  value: 8
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(1)
+  label: 저장
+- id: comp.button.color_default
+  value: '#FFFFFF / #2B6CF6'
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(1)
+  label: 저장
+- id: comp.button.color_hover
+  src: none
+  reason: raw는 정지 상태 계산 스타일만 담음 — 올림 상태 스타일 · 캡처 없음
+- id: comp.button.color_pressed
+  src: none
+  reason: raw는 정지 상태 계산 스타일만 담음 — 누름 상태 스타일 · 캡처 없음
+- id: comp.button.color_disabled
+  value: '#A3A9B3 / #EEF0F3'
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(3)
+  label: 보내기
+- id: comp.input.height
+  value: 44
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>input:nth-of-type(1)
+- id: comp.input.width
+  value: 280
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>input:nth-of-type(1)
+- id: comp.input.padding
+  value: 0 · 14
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>input:nth-of-type(1)
+- id: comp.input.text
+  value: 15 / 24 / 400
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>input:nth-of-type(1)
+- id: comp.input.radius
+  value: 8
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>input:nth-of-type(1)
+- id: comp.input.color_default
+  value: '#1A1C20 / #FFFFFF / #E1E4E8'
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>input:nth-of-type(1)
+- id: comp.input.color_hover
+  src: none
+  reason: raw는 정지 상태 계산 스타일만 담음 — 올림 상태 스타일 · 캡처 없음
+- id: comp.input.color_pressed
+  src: none
+  reason: raw는 정지 상태 계산 스타일만 담음 — 누름(포커스) 상태 스타일 · 캡처 없음
+- id: comp.input.color_disabled
+  src: na
+  reason: 홈 화면에 비활성 입력이 없음
+- id: comp.tab.height
+  value: 40
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(3)>div:nth-of-type(1)>div:nth-of-type(1)
+  label: 전체
+- id: comp.tab.width
+  src: none
+  reason: raw에 min-width가 없고 탭 폭 38은 글자 폭 + 좌우 여백으로 보임 — 최소 · 고정 폭 근거 없음
+- id: comp.tab.padding
+  value: 8 · 4
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(3)>div:nth-of-type(1)>div:nth-of-type(1)
+  label: 전체
+- id: comp.tab.text
+  value: 15 / 24 / 600
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(3)>div:nth-of-type(1)>div:nth-of-type(1)
+  label: 전체
+- id: comp.tab.radius
+  value: 0
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(3)>div:nth-of-type(1)>div:nth-of-type(1)
+  label: 전체
+- id: comp.tab.color_default
+  value: '#5B616E / rgba(0, 0, 0, 0)'
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(3)>div:nth-of-type(1)>div:nth-of-type(2)
+  label: 진행
+- id: comp.tab.color_hover
+  src: none
+  reason: raw는 정지 상태 계산 스타일만 담음 — 올림 상태 스타일 · 캡처 없음
+- id: comp.tab.color_pressed
+  src: none
+  reason: raw는 정지 상태 계산 스타일만 담음 — 누름 상태 스타일 · 캡처 없음 (선택 탭은 §7 규칙에 적음)
+- id: comp.tab.color_disabled
+  src: na
+  reason: 홈 화면에 비활성 탭이 없음
+- id: comp.badge.height
+  value: 22
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>span:nth-of-type(1)
+  label: 정상
+- id: comp.badge.width
+  src: none
+  reason: raw에 min-width가 없고 배지 폭 40은 글자 폭 + 좌우 여백으로 보임 — 최소 · 고정 폭 근거 없음
+- id: comp.badge.padding
+  value: 3 · 8
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>span:nth-of-type(1)
+  label: 정상
+- id: comp.badge.text
+  value: 12 / 16 / 600
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>span:nth-of-type(1)
+  label: 정상
+- id: comp.badge.radius
+  value: 999
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>span:nth-of-type(1)
+  label: 정상
+- id: comp.badge.color_default
+  value: '#1F9D55 / #E6F4EC'
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>span:nth-of-type(1)
+  label: 정상
+- id: comp.badge.color_hover
+  src: na
+  reason: 배지는 누를 수 없는 표시 요소라 올림 상태가 성립하지 않음
+- id: comp.badge.color_pressed
+  src: na
+  reason: 배지는 누를 수 없는 표시 요소라 누름 상태가 성립하지 않음
+- id: comp.badge.color_disabled
+  src: na
+  reason: 배지는 표시 요소라 비활성 상태가 성립하지 않음
+- id: comp.table.height
+  value: 40 / 48
+  unit: px
+  src: dom
+  el:
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(3)>table:nth-of-type(1)>thead:nth-of-type(1)>tr:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(3)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(1)
+- id: comp.table.width
+  src: none
+  reason: 표 폭 776은 본문 폭을 그대로 채움 — raw에 최소 · 고정 폭 지정 근거 없음
+- id: comp.table.padding
+  value: 0 · 12
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(3)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)
+  label: 가
+- id: comp.table.text
+  value: 15 / 24 / 400
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(3)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)
+  label: 가
+- id: comp.table.radius
+  value: 0
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(3)>table:nth-of-type(1)
+- id: comp.table.color_default
+  value: '#1A1C20 / rgba(0, 0, 0, 0) / #E1E4E8'
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(3)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)
+  label: 가
+- id: comp.table.color_hover
+  src: none
+  reason: raw는 정지 상태 계산 스타일만 담음 — 행 올림 상태 스타일 · 캡처 없음
+- id: comp.table.color_pressed
+  src: na
+  reason: 표 행에 누름 동작이 보이지 않아 누름 상태가 성립하지 않음
+- id: comp.table.color_disabled
+  src: na
+  reason: 홈 화면 표에 비활성 행이 없음
+- id: comp.modal.height
+  value: 216
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)
+  label: 가상 안내
+- id: comp.modal.width
+  src: none
+  reason: 카드 폭 312는 패널 폭 안을 채운 값으로 보임 — raw에 최소 · 고정 폭 지정 근거 없음
+- id: comp.modal.padding
+  value: 24
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)
+  label: 가상 안내
+- id: comp.modal.text
+  value: 15 / 24 / 400
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>p:nth-of-type(1)
+- id: comp.modal.radius
+  value: 20
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)
+  label: 가상 안내
+- id: comp.modal.color_default
+  value: '#1A1C20 / #FFFFFF'
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)
+  label: 가상 안내
+- id: comp.modal.color_hover
+  src: na
+  reason: 모달 몸체는 누르는 요소가 아니라 올림 상태가 성립하지 않음
+- id: comp.modal.color_pressed
+  src: na
+  reason: 모달 몸체는 누르는 요소가 아니라 누름 상태가 성립하지 않음
+- id: comp.modal.color_disabled
+  src: na
+  reason: 모달 몸체에는 비활성 상태가 성립하지 않음
+- id: comp.empty.height
+  value: 83.3333
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(4)>div:nth-of-type(1)
+  label: 아직 항목이 없어요
+- id: comp.empty.width
+  src: none
+  reason: 빈 상태 폭 776은 본문 폭을 그대로 채움 — raw에 최소 · 고정 폭 지정 근거 없음
+- id: comp.empty.padding
+  value: 32
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(4)>div:nth-of-type(1)
+  label: 아직 항목이 없어요
+- id: comp.empty.text
+  value: 13 / 18 / 400
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(4)>div:nth-of-type(1)>p:nth-of-type(1)
+  label: 아직 항목이 없어요
+- id: comp.empty.radius
+  value: 12
+  unit: px
+  src: dom
+  el: body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(4)>div:nth-of-type(1)
+  label: 아직 항목이 없어요
+- id: comp.empty.color_default
+  value: '#5B616E / rgba(0, 0, 0, 0) / #E1E4E8'
+  src: dom
+  el:
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(4)>div:nth-of-type(1)>p:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(4)>div:nth-of-type(1)
+  - body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(4)>div:nth-of-type(1)
+- id: comp.empty.color_hover
+  src: na
+  reason: 빈 상태는 누르는 요소가 아니라 올림 상태가 성립하지 않음
+- id: comp.empty.color_pressed
+  src: na
+  reason: 빈 상태는 누르는 요소가 아니라 누름 상태가 성립하지 않음
+- id: comp.empty.color_disabled
+  src: na
+  reason: 빈 상태에는 비활성 상태가 성립하지 않음
+pixels: []
+rules:
+- rule: 선택된 탭만 기본 글자색 + 아래 2px 주요 색 선, 나머지 탭은 보조 글자색 · 선 없음 (굵기는 모두 600)
+  refs:
+  - comp.tab.color_default
+  - comp.tab.text
+  - color.text
+  - color.primary
+- rule: 배지는 상태 색 글자 + 같은 색조의 옅은 배경, 반경 999로 알약 모양
+  refs:
+  - comp.badge.color_default
+  - comp.badge.radius
+  - color.status
+- rule: 반경은 요소가 클수록 커짐 — 버튼 · 입력 8, 카드 · 빈 상태 12, 떠 있는 카드 20
+  refs:
+  - radius.scale
+  - radius.components
+  - comp.empty.radius
+  - comp.modal.radius
+- rule: 주 버튼 높이 44는 입력 높이 44와 같고, 보조 버튼만 36
+  refs:
+  - comp.button.height
+  - comp.input.height
+- rule: 선 색은 한 가지(#E1E4E8)이고 두께도 0.666667px 한 가지 — 입력 · 표 구분선 · 빈 상태 테두리 · 탭 바닥선
+  refs:
+  - color.border
+  - comp.input.color_default
+  - comp.table.color_default
+  - comp.empty.color_default
+- rule: 표 머리는 13 / 18 / 600 보조 글자색 + 면 배경(#F7F8FA), 몸 칸은 15 / 24 / 400 기본 글자 + 아래 구분선
+  refs:
+  - comp.table.text
+  - comp.table.color_default
+  - type.caption
+  - color.bg
+- rule: 섹션 사이 32는 페이지 좌우 여백 32 · 빈 상태 안쪽 여백 32와 같은 단계
+  refs:
+  - space.section_gap
+  - layout.page_padding
+  - comp.empty.padding
+  - space.scale
+- rule: 그림자는 두 단계 — 카드는 옅고 짧게(0 1 2), 떠 있는 카드는 진하고 넓게(0 8 24)
+  refs:
+  - shadow.scale

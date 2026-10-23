@@ -1,0 +1,9 @@
+run: demo-sample-2026-10-23
+service: demo-sample
+date: '2026-10-23'
+status: 완료
+created_at: '2026-10-23T17:18:26'
+retries:
+  ingest: 1
+  check_to_organize: 0
+  block_parse: 0

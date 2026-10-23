@@ -1,0 +1,9 @@
+# 사람이 채운다 (S1 수집). 형식은 docs/pipeline.md · docs/outputs.md
+service: demo-sample
+service_aliases: []        # 서비스의 다른 이름 (C14 — value · basis에 들어가면 차단). 예: [한글 이름, 영문 이름]
+
+screens:                   # 잴 화면. DOM이면 raw/dom-<name>.json이 있어야 한다
+  - { name: home, method: dom }
+
+captures: []               # 캡처 — raw/captures/<file>. 배율은 사람이 적는다
+#  - { name: home-modal, file: home-modal.png, scale: 1.5, screen: home }

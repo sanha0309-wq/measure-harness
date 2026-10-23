@@ -1,0 +1,77 @@
+judgments:
+- token: font.family
+  judge: 유지
+  why: 글꼴을 바꾸면 전체 화면에 영향이 가서 대응표 한 행만으로 정할 일이 아님
+- token: type.title-page.size
+  judge: 채택 후보
+  why: 본문 대비 비율이 우리 쪽은 약 1.71, 상대는 약 1.87로 페이지 제목 위계가 더 뚜렷함
+  propose: 28
+- token: type.title-page.lineHeight
+  judge: 채택 후보
+  why: 제목 크기를 올리면 행간도 같이 올려야 비율(약 1.29)이 유지됨
+  propose: 36
+- token: type.title-section.size
+  judge: 유지
+  why: 차이가 2로 작고 지금 값으로도 페이지 제목과 본문 사이 단계가 구분됨
+- token: type.title-section.lineHeight
+  judge: 유지
+  why: 크기를 유지하므로 행간 비율(약 1.44)도 그대로 맞음
+- token: type.body.size
+  judge: 유지
+  why: 차이 1, 본문 크기는 바꾸면 영향 범위가 가장 넓음
+- token: type.body.lineHeight
+  judge: 유지
+  why: 우리 비율 약 1.57로 이미 읽기 좋은 범위 안. 상대 값은 크기 15 기준이라 그대로 옮길 근거가 약함
+- token: type.caption.size
+  judge: 유지
+  why: 차이 1, 보조 글자 단계 안에서 생기는 차이
+- token: type.caption.lineHeight
+  judge: 채택 후보
+  why: 우리 행간 비율 약 1.33은 다른 단계(1.4 이상)보다 빽빽함. 18이면 1.5가 되어 다른 단계와 맞음
+  propose: 18
+- token: type.button.size
+  judge: 유지
+  why: 차이 1, 본문 크기 유지와 맞춤
+- token: type.button.lineHeight
+  judge: 유지
+  why: 버튼 높이는 행간이 아니라 고정 높이로 정하므로 차이 2의 영향이 작음
+- token: color.text-primary
+  judge: 유지
+  why: 둘 다 거의 검정이라 눈으로 구분하기 어려운 차이
+- token: color.text-secondary
+  judge: 유지
+  why: 차이가 회색 한 단계 안
+- token: color.text-disabled
+  judge: 유지
+  why: 채널마다 차이가 10 미만, 회색 한 단계 안
+- token: color.bg-sunken
+  judge: 유지
+  why: 상대는 푸른 기가 조금 도는 회색, 우리는 중립 회색. 우리 회색 계열(border 포함)이 중립이라 그대로 두는 편이 일관됨
+- token: color.border-default
+  judge: 유지
+  why: 중립 회색 대 약한 푸른 회색 차이. bg-sunken과 같은 이유로 유지
+- token: color.primary
+  judge: 유지
+  why: 주 색은 브랜드 결정이라 실측 비교만으로 바꾸지 않음
+- token: color.warning
+  judge: 유지
+  why: 같은 주황 계열 안의 작은 차이
+- token: color.danger
+  judge: 유지
+  why: 같은 빨강 계열 안의 작은 차이
+- token: space
+  judge: 보류
+  why: 상대 쪽 40 단계가 없는 것이 실제로 없는 것인지, 잰 화면에 안 나온 것인지 이 행만으로는 구분할 수 없음
+- token: layout.cardPadding
+  judge: 유지
+  why: 차이 4로 space 단계 하나 차이. 안쪽 여백이 넓은 것은 우리 쪽 성격으로 볼 수 있음
+- token: layout.cardGap
+  judge: 채택 후보
+  why: 우리는 카드 간격이 안쪽 여백과 같아 카드끼리 묶여 보이지 않음. 간격을 여백보다 작게 하면 묶음이 분명해짐
+  propose: 16
+- token: component.button.heights
+  judge: 보류
+  why: 단계 수(3 대 2)와 값이 모두 달라 한 화면 실측만으로 어느 단계를 바꿀지 정할 수 없음
+- token: component.input.height
+  judge: 유지
+  why: 우리 입력 높이가 버튼 중간 단계와 같아 일관됨. 버튼 높이 판단이 보류라 이것만 따로 바꾸지 않음

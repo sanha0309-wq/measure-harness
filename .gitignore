@@ -1,0 +1,20 @@
+# 손으로 잰 비교 기준 문서 — 공개하지 않는다
+refs/
+.claude/refs-access.log
+
+# run은 시연용 하나만 공개한다 (fixtures/sample.html을 잰 run)
+runs/*
+!runs/demo-sample-*/
+
+# 캡처 이미지는 어떤 경우에도 커밋하지 않는다 (시연 run 포함)
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+*.bmp
+*.heic
+
+# 파이썬 · 로컬 설정
+__pycache__/
+.claude/settings.local.json

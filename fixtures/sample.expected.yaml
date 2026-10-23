@@ -1,0 +1,101 @@
+# fixtures/sample.html의 정답 — CSS에 적은 값 그대로. sample.html을 바꾸면 이 파일도 같이 바꾼다.
+# value: 하네스 값과 비교할 정답 (atoms 비교 — 색 · 수 · 낱말이 같으면 맞음)
+# src: none / na 는 「정답이 못 잼 / 해당 없음」 — 스니펫은 기본 상태만 재므로 올림 · 누름은 DOM으로 못 잰다
+values:
+  layout.columns:      { value: "240 / 840 / 360" }
+  layout.sidebar:      { value: 240 }
+  layout.content_max:  { value: 960 }
+  layout.page_padding: { value: 32 }
+  layout.panel:        { value: 360 }
+
+  type.title_page:     { value: "28 / 36 / 700 / -0.4" }
+  type.title_section:  { value: "20 / 28 / 600 / normal" }
+  type.body:           { value: "15 / 24 / 400 / normal" }
+  type.caption:        { value: "13 / 18 / 400 / normal" }
+  type.button:         { value: "15 / 22 / 600 / normal" }
+  type.family:         { value: "Sample Sans" }
+
+  color.text:          { value: "#1A1C20 / #5B616E / #A3A9B3" }
+  color.bg:            { value: "#FFFFFF / #F7F8FA / #EEF0F3" }
+  color.border:        { value: "#E1E4E8" }
+  color.primary:       { value: "#2B6CF6" }
+  color.status:        { value: "#1F9D55 / #E8A317 / #D93B3B / #3A7BD5" }
+
+  space.scale:         { value: "8 / 12 / 16 / 20 / 24 / 32" }
+  space.card_padding:  { value: 20 }
+  space.card_gap:      { value: 16 }
+  space.section_gap:   { value: 32 }
+
+  radius.scale:        { value: "8 / 12 / 20 / 999" }
+  radius.components:   { value: "8 / 8 / 12 / 20" }
+  shadow.scale:        { value: "rgba(0, 0, 0, 0.06) 0 1 2 0 / rgba(0, 0, 0, 0.12) 0 8 24 0" }
+
+  comp.button.height:         { value: "36 / 44" }
+  comp.button.width:          { value: "64 / 70" }
+  comp.button.padding:        { value: "0 · 16 / 0 · 20" }
+  comp.button.text:           { value: "15 / 22 / 600" }
+  comp.button.radius:         { value: 8 }
+  comp.button.color_default:  { value: "#FFFFFF / #2B6CF6" }
+  comp.button.color_hover:    { src: none }
+  comp.button.color_pressed:  { src: none }
+  comp.button.color_disabled: { value: "#A3A9B3 / #EEF0F3" }
+
+  comp.input.height:          { value: 44 }
+  comp.input.width:           { value: 280 }
+  comp.input.padding:         { value: "0 · 14" }
+  comp.input.text:            { value: "15 / 24 / 400" }
+  comp.input.radius:          { value: 8 }
+  comp.input.color_default:   { value: "#1A1C20 / #FFFFFF / #E1E4E8" }
+  comp.input.color_hover:     { src: none }
+  comp.input.color_pressed:   { src: none }
+  comp.input.color_disabled:  { src: none }
+
+  comp.tab.height:            { value: 40 }
+  comp.tab.width:             { value: 38 }
+  comp.tab.padding:           { value: "8 · 4" }
+  comp.tab.text:              { value: "15 / 24 / 600" }
+  comp.tab.radius:            { value: 0 }
+  comp.tab.color_default:     { value: "#5B616E" }
+  comp.tab.color_hover:       { src: none }
+  comp.tab.color_pressed:     { src: none }
+  comp.tab.color_disabled:    { src: na }
+
+  comp.badge.height:          { value: 22 }
+  comp.badge.width:           { value: 40 }
+  comp.badge.padding:         { value: "3 · 8" }
+  comp.badge.text:            { value: "12 / 16 / 600" }
+  comp.badge.radius:          { value: 999 }
+  comp.badge.color_default:   { value: "#1F9D55 / #E6F4EC" }
+  comp.badge.color_hover:     { src: na }
+  comp.badge.color_pressed:   { src: na }
+  comp.badge.color_disabled:  { src: na }
+
+  comp.table.height:          { value: "40 / 48" }
+  comp.table.width:           { value: 776 }
+  comp.table.padding:         { value: "0 · 12" }
+  comp.table.text:            { value: "13 / 18 / 600 / 15 / 24 / 400" }
+  comp.table.radius:          { value: 0 }
+  comp.table.color_default:   { value: "#5B616E / #F7F8FA / #E1E4E8" }
+  comp.table.color_hover:     { src: none }
+  comp.table.color_pressed:   { src: na }
+  comp.table.color_disabled:  { src: na }
+
+  comp.modal.height:          { value: 216 }
+  comp.modal.width:           { value: 312 }
+  comp.modal.padding:         { value: "24 · 24" }
+  comp.modal.text:            { value: "20 / 28 / 600" }
+  comp.modal.radius:          { value: 20 }
+  comp.modal.color_default:   { value: "#FFFFFF" }
+  comp.modal.color_hover:     { src: na }
+  comp.modal.color_pressed:   { src: na }
+  comp.modal.color_disabled:  { src: na }
+
+  comp.empty.height:          { value: 84 }
+  comp.empty.width:           { value: 776 }
+  comp.empty.padding:         { value: "32 · 32" }
+  comp.empty.text:            { value: "13 / 18 / 400" }
+  comp.empty.radius:          { value: 12 }
+  comp.empty.color_default:   { value: "#5B616E / #E1E4E8" }
+  comp.empty.color_hover:     { src: na }
+  comp.empty.color_pressed:   { src: na }
+  comp.empty.color_disabled:  { src: na }

@@ -1,0 +1,117 @@
+<!doctype html>
+<!--
+  가상 견본 페이지 — 레퍼런스 실측 하네스 시연 · 정확도 확인용. 실제 서비스가 아니다.
+  값의 정답은 fixtures/sample.expected.yaml. 여기 값을 바꾸면 정답 파일도 같이 바꾼다.
+  1440 × 900 안에 모든 컴포넌트가 보이게 짰다 (스니펫은 화면에 보이는 요소만 담는다).
+-->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>가상 견본 — 하네스 fixture</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font-family: "Sample Sans", system-ui, sans-serif;
+    font-size: 15px; line-height: 24px; font-weight: 400;
+    color: #1A1C20; background: #FFFFFF;
+  }
+  .app { display: grid; grid-template-columns: 240px 840px 360px; min-height: 900px; }
+  .sidebar { width: 240px; background: #EEF0F3; padding: 24px 16px; }
+  .nav-item { height: 40px; padding: 8px 12px; border-radius: 8px; font-size: 15px; line-height: 24px; color: #5B616E; }
+  .nav-item.on { background: #FFFFFF; color: #1A1C20; font-weight: 600; }
+  .main { padding: 32px 32px; }
+  .content { max-width: 960px; }
+  .page-title { margin: 0; font-size: 28px; line-height: 36px; font-weight: 700; letter-spacing: -0.4px; }
+  .section { margin-top: 32px; }
+  .section-title { margin: 0 0 12px; font-size: 20px; line-height: 28px; font-weight: 600; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .card { background: #F7F8FA; border-radius: 12px; padding: 20px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06); }
+  .caption { font-size: 13px; line-height: 18px; color: #5B616E; }
+  .row { display: flex; gap: 12px; align-items: center; }
+  .btn { height: 44px; padding: 0 20px; border-radius: 8px; border: 0; font: inherit; font-size: 15px; line-height: 22px; font-weight: 600; background: #2B6CF6; color: #FFFFFF; }
+  .btn.sm { height: 36px; padding: 0 16px; background: #F7F8FA; color: #1A1C20; border: 1px solid #E1E4E8; }
+  .btn:disabled { background: #EEF0F3; color: #A3A9B3; }
+  .input { width: 280px; height: 44px; padding: 0 14px; border: 1px solid #E1E4E8; border-radius: 8px; font: inherit; color: #1A1C20; background: #FFFFFF; }
+  .tabs { display: flex; gap: 24px; border-bottom: 1px solid #E1E4E8; }
+  .tab { height: 40px; padding: 8px 4px; font-size: 15px; line-height: 24px; font-weight: 600; color: #5B616E; }
+  .tab.on { color: #1A1C20; border-bottom: 2px solid #2B6CF6; }
+  .badge { display: inline-block; height: 22px; padding: 3px 8px; border-radius: 999px; font-size: 12px; line-height: 16px; font-weight: 600; }
+  .b-ok { background: #E6F4EC; color: #1F9D55; }
+  .b-warn { background: #FCF3E0; color: #E8A317; }
+  .b-err { background: #FBE7E7; color: #D93B3B; }
+  .b-info { background: #E7EFFA; color: #3A7BD5; }
+  table { width: 100%; border-collapse: collapse; }
+  th { height: 40px; padding: 0 12px; text-align: left; background: #F7F8FA; font-size: 13px; line-height: 18px; font-weight: 600; color: #5B616E; }
+  td { height: 48px; padding: 0 12px; border-bottom: 1px solid #E1E4E8; font-size: 15px; line-height: 24px; }
+  .empty { padding: 32px; border: 1px dashed #E1E4E8; border-radius: 12px; text-align: center; }
+  .empty .caption { margin: 0; }
+  .panel { width: 360px; padding: 24px; background: #F7F8FA; }
+  .modal { width: 312px; padding: 24px; background: #FFFFFF; border-radius: 20px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); }
+  .modal-title { margin: 0 0 8px; font-size: 20px; line-height: 28px; font-weight: 600; }
+  .modal p { margin: 0 0 16px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="sidebar">
+    <div class="nav-item on">홈</div>
+    <div class="nav-item">목록</div>
+    <div class="nav-item">설정</div>
+  </nav>
+  <main class="main">
+    <div class="content">
+      <h1 class="page-title">가상 대시보드</h1>
+
+      <section class="section">
+        <h2 class="section-title">요약</h2>
+        <div class="cards">
+          <div class="card"><div class="caption">항목 A</div><div>1,204</div></div>
+          <div class="card"><div class="caption">항목 B</div><div>87</div></div>
+          <div class="card"><div class="caption">항목 C</div><div>3</div></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="row">
+          <button class="btn">저장</button>
+          <button class="btn sm">취소</button>
+          <button class="btn" disabled>보내기</button>
+          <input class="input" value="검색어">
+          <span class="badge b-ok">정상</span>
+          <span class="badge b-warn">주의</span>
+          <span class="badge b-err">오류</span>
+          <span class="badge b-info">안내</span>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="tabs">
+          <div class="tab on">전체</div>
+          <div class="tab">진행</div>
+          <div class="tab">끝남</div>
+        </div>
+        <table>
+          <thead><tr><th>이름</th><th>상태</th><th>수</th></tr></thead>
+          <tbody>
+            <tr><td>가</td><td>정상</td><td>12</td></tr>
+            <tr><td>나</td><td>주의</td><td>4</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <div class="empty"><p class="caption">아직 항목이 없어요</p></div>
+      </section>
+    </div>
+  </main>
+  <aside class="panel">
+    <div class="modal" role="dialog">
+      <h3 class="modal-title">가상 안내</h3>
+      <p>이 글은 하네스가 실측 문서로 옮기면 안 되는 긴 본문의 예시입니다. 짧은 라벨만 label 필드에 남깁니다.</p>
+      <button class="btn">확인</button>
+    </div>
+  </aside>
+</div>
+</body>
+</html>

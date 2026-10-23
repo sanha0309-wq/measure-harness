@@ -1,0 +1,168 @@
+# rules.yaml — 레퍼런스 실측 하네스의 규칙 · 수치 · 대응표는 전부 이 파일 한 곳에 둔다.
+# 스크립트는 규칙 ID로 판정하고, 결과는 개수로 남긴다.
+# 사람이 정한 수치 중 근거 없이 고른 것은 `arbitrary: true` (〔임의〕)로 표시한다.
+
+version: 1
+
+run:
+  viewport_width: 1440            # run 하나에 폭 하나 (PRD §4)
+  same_day_suffix: "-{n}"         # 같은 서비스 · 같은 날 → -2, -3 (덮어쓰기 금지)
+  demo_service: demo-sample       # 공개하는 run은 이 서비스(fixtures/sample.html)의 run뿐 → runs/demo-sample-<날짜>[-n]/
+  date_format: "%Y-%m-%d"
+
+status_flow: [수집 중, 정리 중, 점검 중, 승인 대기, 완료]
+
+snippet:
+  max_elements: 2000              # 넘으면 잘라서 경고 (I6)
+  arbitrary_max_elements: true
+  include: visible_only           # 뷰포트 안 · display≠none · visibility≠hidden
+  text_prefix_chars: 20           # 요소마다 글자 앞부분을 이만큼 담는다 (C17 label 대조용, = thresholds.label_max_chars)
+  props: [font-family, font-size, line-height, font-weight, letter-spacing,
+          color, background-color, border-color, border-width,
+          border-radius, box-shadow, padding, margin, gap, width, height,
+          max-width, grid-template-columns, opacity]
+
+sources:
+  allowed: [dom, pixel, est, none, na]   # arbitrary는 받지 않는다
+  required:
+    pixel: [value, scale, tol]
+    est:   [value, basis]
+    none:  [reason]
+    na:    [reason]
+    dom:   [value, el]                    # el = 스니펫이 담은 요소 경로 (C7 대조용)
+  optional: [unit, label, capture]       # label = 요소를 알아보기 위한 짧은 화면 문구 (measure.md 값 옆에 찍힘)
+  scale_expected: [1, 1.5, 2, 3]          # W5
+  pixel_tol: 1                            # pixel.py가 붙이는 ± (PRD §5)
+  pixel_search_margin: 8                  # pixel.py가 제안 박스 밖으로 가장자리를 찾아 나가는 최대 px (캡처 픽셀)
+  arbitrary_pixel_search_margin: true
+  arbitrary_scale_expected: true
+
+# 항목 ID → 값 종류 (C6 형식 검사). fnmatch 패턴, 위에서부터 먼저 맞는 것
+kinds:
+  - { match: "comp.*.color_*", kind: color }
+  - { match: "color.*",        kind: color }
+  - { match: "comp.*.text",    kind: free }
+  - { match: "comp.*",         kind: length }
+  - { match: "space.*",        kind: length }
+  - { match: "radius.*",       kind: length }
+  - { match: "layout.columns", kind: free }
+  - { match: "layout.*",       kind: length }
+  - { match: "type.family",    kind: family }
+  - { match: "*",              kind: free }
+
+formats:
+  color:  '^(#[0-9A-Fa-f]{6}|rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*(,\s*(0|1|0?\.\d+)\s*)?\))$'
+  length: '^-?\d+(\.\d+)?(px)?$'
+  # 여러 값은 「 / 」로, 한 값 안의 짝(상하 · 좌우)은 「 · 」로 잇는다. 형식 검사는 조각마다
+  part_sep: ' / '
+  pair_sep: ' · '
+  w1_exclude: [type.family]                # W1에서 빼는 항목 (글꼴 이름은 길다)
+
+tolerance:                        # compare.md: 이 안이면 「같음」→ 행을 만들지 않는다
+  dom:   { length: 0, color: 0 }
+  pixel: { length: tol, color_channel: 2 }   # tol = 그 값의 ±
+  est:   { always_row: true }
+  arbitrary_pixel_color_channel: true
+  arbitrary_est_always_row: true
+
+retry:
+  ingest: 3                       # 넘으면 그 화면을 input.yaml에서 빼거나 사람이 판단
+  arbitrary_ingest: true
+  check_to_organize: 2            # 넘으면 「점검 중」에 멈추고 남은 차단 목록을 사람에게
+  block_parse: 1                  # 블록을 읽을 수 없을 때 (YAML 오류 · 허용 안 된 src) 같은 에이전트에 다시 요청. 위와 따로 센다
+  arbitrary_block_parse: true
+
+thresholds:
+  quote_run_chars: 12             # W1
+  label_max_chars: 20             # C16 — label은 짧은 화면 문구만
+  unmeasured_ratio: 0.30          # W2 (못 잼 / 측정 항목, 해당 없음은 분모에서 뺀다)
+  estimated_ratio: 0.20           # W3
+  arbitrary: [quote_run_chars, label_max_chars, unmeasured_ratio, estimated_ratio]
+
+gates:
+  ingest:                         # S1 · ingest.py
+    - { id: I1, level: block, desc: raw JSON이 스니펫 형식과 맞음 }
+    - { id: I2, level: block, desc: "화면 폭 = run.viewport_width" }
+    - { id: I3, level: block, desc: devicePixelRatio가 기록됨 }
+    - { id: I4, level: block, desc: raw 화면 이름과 input.yaml 화면 목록이 서로 일치 }
+    - { id: I5, level: block, desc: input.yaml 캡처마다 배율이 있고 파일이 실제로 있음 }
+    - { id: I6, level: warn,  desc: "요소 수가 snippet.max_elements를 넘어 잘림" }
+  check:                          # S3 · check.py
+    - { id: C1,  level: block, desc: measure.md 제목 목록 = 템플릿 제목 목록 (순서 포함) }
+    - { id: C2,  level: block, desc: 템플릿 ID가 measure.md에 정확히 한 번씩 }
+    - { id: C3,  level: block, desc: 값이 있는 칸에 출처가 없음 }
+    - { id: C4,  level: block, desc: measure.md에 〔임의〕 }
+    - { id: C5,  level: block, desc: "sources.required 필드 누락 (배율 · ± · 근거 · 이유)" }
+    - { id: C6,  level: block, desc: 값 형식 오류 (formats) }
+    - { id: C7,  level: block, desc: "src: dom 값이 raw JSON의 el 값과 다름" }
+    - { id: C8,  level: block, desc: "src: pixel 값이 pixel.py 결과와 다름" }
+    - { id: C9,  level: block, desc: gaps.md 항목 집합 = measure.md 못 잼 + 추정 집합 }
+    - { id: C10, level: block, desc: "tokens.html 견본 수 = tokens.json 토큰 수, data-token 키가 모두 tokens.json에 있음" }
+    - { id: C11, level: block, desc: compare.md 행마다 판단이 하나 / 허용 오차 안의 행이 없음 }
+    - { id: C12, level: block, desc: "run 폴더의 raw/captures/ 밖에 이미지 파일이 있음" }
+    - { id: C13, level: block, desc: "src: dom 블록의 el 경로가 raw JSON에 없음" }
+    - { id: C14, level: block, desc: "value · basis · why에 run.yaml의 서비스 이름이 들어 있음" }
+    - { id: C15, level: block, desc: "〔추정〕 출처 행의 판단이 「채택 후보」" }
+    - { id: C16, level: block, desc: "label이 thresholds.label_max_chars자를 넘음 (긴 본문 옮김)" }
+    - { id: C17, level: block, desc: "label이 raw JSON의 그 el 글자 앞부분으로 시작하지 않음 (또는 el 없이 label만 있음)" }
+    - { id: C18, level: block, desc: "run을 만든 뒤 Claude가 refs/를 읽으려 함 (guard 훅이 막고 .claude/refs-access.log에 남긴 줄)" }
+    - { id: W1,  level: warn,  desc: "값 칸에 글자가 thresholds.quote_run_chars자 넘게 이어짐 (문구 원문 의심, label의 「」 안은 세지 않음)" }
+    - { id: W2,  level: warn,  desc: "못 잼 비율 > thresholds.unmeasured_ratio" }
+    - { id: W3,  level: warn,  desc: "추정 비율 > thresholds.estimated_ratio" }
+    - { id: W4,  level: warn,  desc: 판단 블록이 없어 기본값 「보류」로 찍힌 행 }
+    - { id: W5,  level: warn,  desc: "배율이 sources.scale_expected에 없음" }
+  approval:                       # S4 · finalize.py
+    checklist:
+      - W1 문구 원문 경고를 하나씩 확인했다 (원문이면 값 칸에서 지운다)
+      - compare.md 판단(채택 후보 · 유지 · 보류)을 확인했다
+      - 〔추정〕 값과 근거를 확인했다
+      - 캡처 이미지가 커밋 대상이 아님을 확인했다
+    require: [all_checked, approver, date, hashes_match]
+    hashed: [measure.md, tokens.json, tokens.html, compare.md, gaps.md, corrections.md, check-report.json]
+
+commit_block:                   # scripts/precommit.py — 스테이징되면 커밋 거부
+  image_ext: [.png, .jpg, .jpeg, .webp, .gif, .bmp, .heic]
+  paths: [refs/]
+  runs_allowed_prefix: runs/demo-sample-   # runs/ 아래는 이것만
+
+refs_compare:                   # 하네스 검증 기준 (R8, 1회) — scripts/verify_refs.py만 쓴다. 평소 run은 refs 없이 돈다 (PRD §9)
+  map: refs/map.yaml            # refs 항목 → 템플릿 ID 대응표 (비공개)
+  tolerance:
+    layout_length: 2            # refs는 1442 폭에서 잰 문서 → layout.* 길이는 ±2
+    other: 0                    # 컴포넌트 높이 · 반경 · 색 · 글자는 그대로 비교
+  pass:
+    toc_match: 1.0
+    missing_source: 0
+    coverage: 0.80
+  arbitrary: [toc_match, missing_source, coverage]
+
+judge:
+  allowed: [채택 후보, 유지, 보류]
+  default: 보류
+  arbitrary_default: true
+
+# 템플릿 항목 ID → 토큰 키. 여기에 없는 항목은 measure.md에만 남는다.
+# keys가 여러 개면 값 칸의 「/」 순서대로. compare: set이면 단계 목록끼리 집합으로 비교.
+token_map:
+  type.family:          { keys: [font.family] }
+  type.title_page:      { keys: [type.title-page] }
+  type.title_section:   { keys: [type.title-section] }
+  type.body:            { keys: [type.body] }
+  type.caption:         { keys: [type.caption] }
+  type.button:          { keys: [type.button] }
+  color.text:           { keys: [color.text-primary, color.text-secondary, color.text-disabled] }
+  color.bg:             { keys: [color.bg-base, color.bg-surface, color.bg-sunken] }
+  color.border:         { keys: [color.border-default] }
+  color.primary:        { keys: [color.primary] }
+  color.status:         { keys: [color.success, color.warning, color.danger, color.info] }
+  space.scale:          { keys: [space], compare: set }
+  space.card_padding:   { keys: [layout.cardPadding] }
+  space.card_gap:       { keys: [layout.cardGap] }
+  layout.sidebar:       { keys: [layout.sidebar] }
+  layout.page_padding:  { keys: [layout.pagePadding] }
+  radius.scale:         { keys: [radius], compare: set }
+  shadow.scale:         { keys: [shadow], compare: set }
+  comp.button.height:   { keys: [component.button.heights], compare: set }
+  comp.button.radius:   { keys: [component.button.radius] }
+  comp.input.height:    { keys: [component.input.height] }
+  comp.input.radius:    { keys: [component.input.radius] }
