@@ -31,7 +31,7 @@
 | 단계 | 명령 · 할 일 |
 |---|---|
 | S0 | `python scripts/new_run.py <서비스>` |
-| S1 | 사람 차례 → 멈춤. 사람이 끝났다고 하면 `python scripts/ingest.py <run>` |
+| S1 | URL이 있으면 `python scripts/collect.py <run> <화면> <URL>` (raw 저장 · ingest까지). 아니면 사람 차례 → 멈춤. 사람이 끝났다고 하면 `python scripts/ingest.py <run>` |
 | S2 | measurer 에이전트 호출 → 블록을 `python scripts/write_run.py <run> --from measurer`에 stdin으로 → `python scripts/pixel.py <run>` → `python scripts/write_run.py <run> --render` → judge 에이전트 호출 → 블록을 `python scripts/write_run.py <run> --from judge`에 stdin으로 |
 | S3 | `python scripts/check.py <run>` |
 | S4 | 사람 차례 → 멈춤. 사람이 승인했다고 하면 `python scripts/finalize.py <run>` |

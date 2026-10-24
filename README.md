@@ -7,14 +7,14 @@
 - 판정은 스크립트가 합니다. 규칙과 수치는 `rules.yaml` 한 곳에 있습니다
 - 에이전트(measurer · judge)는 파일을 쓰지 않고 YAML 블록만 돌려줍니다. 파일은 `scripts/`가 씁니다
 - 모든 값에 출처가 붙습니다: `〔DOM〕` · `〔픽셀 · 배율 1.5 · ±1〕` · `〔추정 · 근거〕`. 못 잰 칸은 `못 잼 (이유)`로 남습니다
-- 사람은 입력(콘솔 스니펫 실행 · 캡처)과 승인(`approval.md`)만 합니다
+- 사람은 입력(화면 목록 · 캡처, 필요하면 콘솔 스니펫 실행)과 승인(`approval.md`)만 합니다. DOM 수집은 `scripts/collect.py`가 자동으로 합니다
 
 ## 설치
 
 필요한 것: Python 3.10 이상, Claude Code, 크롬 계열 브라우저
 
 ```bash
-pip install -r requirements.txt        # PyYAML, Pillow
+pip install -r requirements.txt        # PyYAML, Pillow, Playwright (브라우저는 내려받지 않음 — 설치된 Chrome 사용)
 python scripts/build_snippet.py        # rules.yaml 값으로 snippet/measure.js 생성
 git init && python scripts/install_hooks.py   # 저장소를 받은 뒤 한 번 — 커밋 금지 훅 설치
 ```
@@ -25,7 +25,7 @@ git init && python scripts/install_hooks.py   # 저장소를 받은 뒤 한 번 
 모든 스크립트는 시작할 때 stdin · stdout · stderr를 UTF-8로 고정합니다 (`scripts/lib.py`의 `utf8_io`, 훅은 `guard_write.py` 안에서 직접).
 `PYTHONUTF8` · `PYTHONIOENCODING`을 따로 설정하지 않아도 됩니다.
 - 확인한 환경: Windows 11, 시스템 인코딩 cp949, Git Bash
-- 확인한 것: 두 환경 변수를 모두 지운 상태에서 한글 블록을 stdin으로 `write_run.py`에 넘기는 S0→S3 한 바퀴(차단 0), `python tests/run_tests.py`(시험 22 · 통과 22)
+- 확인한 것: 두 환경 변수를 모두 지운 상태에서 한글 블록을 stdin으로 `write_run.py`에 넘기는 S0→S3 한 바퀴(차단 0), `python tests/run_tests.py`(시험 32 · 통과 32)
 
 ## 먼저 demo-sample로 시험해 보기
 
@@ -42,7 +42,8 @@ python tests/run_tests.py
 
 ### 직접 한 바퀴 (사람 경로)
 1. Claude Code에서 `/measure demo-sample`
-2. 아래 「콘솔 스니펫 붙여 넣기」대로 `fixtures/sample.html`을 열어 `measure('home')`을 실행하고, 결과를 `runs/demo-sample-<날짜>/raw/dom-home.json`에 붙여 넣습니다
+2. `python scripts/collect.py demo-sample-<날짜> home fixtures/sample.html` — raw 저장 · 수집 단계까지 한 번에 합니다
+   (예비: 아래 「콘솔 스니펫 붙여 넣기」대로 `measure('home')`을 실행하고 결과를 `runs/demo-sample-<날짜>/raw/dom-home.json`에 붙여 넣은 뒤 「수집 끝」)
 3. Claude에게 「수집 끝」이라고 말하면 나머지(정리 → 점검)를 진행하고 숫자 표로 보고합니다
 4. `approval.md`를 확인 · 서명하고 「승인했다」고 말하면 완료됩니다
 
@@ -51,7 +52,8 @@ python tests/run_tests.py
 ## 실제 서비스 재기
 
 ```
-/measure <서비스>        예: /measure some-service
+/measure <서비스>                    예: /measure some-service
+/measure <서비스> <화면> <URL>       예: /measure some-service home https://example.com  → S1을 collect.py로
 ```
 - 서비스 이름은 폴더 이름이 됩니다 (영문 소문자 · 숫자 · `-`). 같은 날 다시 재면 `-2`, `-3`이 붙고 덮어쓰지 않습니다
 - 진행 중인 run이 있으면 그 상태부터 이어서 합니다
@@ -68,7 +70,16 @@ captures:                                        # 앱 · 로그인 화면 등 D
 ```
 캡처 파일은 `raw/captures/`에 둡니다. 캡처는 **어떤 경우에도 커밋되지 않습니다.** 배율은 사람이 적습니다.
 
-### 콘솔 스니펫 붙여 넣기
+### 자동 수집 (collect.py)
+```bash
+python scripts/collect.py <run> <화면 이름> <URL 또는 파일 경로> [--headed]
+```
+- 설치된 Chrome을 Playwright로 1440×900(`rules.yaml`의 `run.viewport_width` × 900)으로 열고, `snippet/measure.js`를 넣어 `measure('<화면>', { returnJson: true })`로 실행합니다
+- 결과를 `runs/<run>/raw/dom-<화면>.json`에 BOM 없는 UTF-8로 저장하고, 바로 `ingest.py <run>`을 돌립니다 (종료 코드도 ingest.py와 같음)
+- 화면은 먼저 `input.yaml`의 `screens`에 적어 둡니다. 없으면 수집 단계에서 차단됩니다 (I4)
+- 새 브라우저 프로필로 열리므로 로그인이 필요한 화면 · 스크롤 아래쪽 화면은 아래 콘솔 방식으로 잽니다
+
+### 콘솔 스니펫 붙여 넣기 (예비)
 1. 크롬에서 잴 페이지를 엽니다. 로그인이 필요하면 사람이 먼저 로그인해 둡니다 (하네스는 로그인하지 않습니다)
 2. 개발자 도구(F12) → 기기 툴바(Ctrl+Shift+M) → 「반응형」에서 폭을 **1440**으로 맞춥니다. 화면 폭이 1440이 아니면 수집 단계에서 차단됩니다 (I2)
 3. Console 탭에 `snippet/measure.js` 전체를 붙여 넣고 Enter. 처음이면 크롬이 붙여 넣기를 막는데, 안내대로 `allow pasting`을 입력한 뒤 다시 붙여 넣습니다
@@ -88,7 +99,7 @@ captures:                                        # 앱 · 로그인 화면 등 D
 |---|---|
 | `measure.md` | 실측 문서. 목차는 `docs/measure-template.md` 그대로 (스크립트가 찍음). 값마다 출처 |
 | `tokens.json` | 색 · 글자 · 간격 · 반경 · 그림자 · 크기 토큰. 키 구조는 `docs/our-tokens.example.json`과 같음 |
-| `tokens.html` | 토큰 견본 페이지. tokens.json에서 스크립트로 생성 — 견본 수 = 토큰 수, 〔추정〕은 점선 |
+| `tokens.html` | 디자인 시스템 페이지. 토큰 견본(tokens.json, 견본 수 = 토큰 수) + 컴포넌트 견본(measure.md §6 값만, 못 잼은 빈 자리). 스크립트로 생성, 〔추정〕은 점선 |
 | `compare.md` | 우리 값과 다른 항목만 + 판단(채택 후보 · 유지 · 보류) |
 | `gaps.md` | 못 잼 · 추정 목록 (measure.md와 같은 항목) |
 | `corrections.md` | 같은 서비스의 이전 run과 달라진 값만 (이전 run이 있을 때) |
@@ -114,7 +125,7 @@ docs/                      기준 문서 (PRD · 스토리 · 파이프라인 ·
 .claude/agents/            measurer · judge (Read · Glob · Grep만)
 .claude/commands/measure.md  /measure
 .claude/settings.json      훅 — runs/ · refs/ 쓰기 금지, refs/ 읽기 금지 (Bash · PowerShell 명령 포함)
-scripts/                   new_run · ingest · write_run · pixel · check · finalize · build_snippet · precommit …
+scripts/                   new_run · collect · ingest · write_run · pixel · check · finalize · build_snippet · precommit …
 snippet/                   콘솔 스니펫 (measure.src.js → measure.js)
 fixtures/                  가상 견본 페이지 + 정답
 tests/                     자동 시험

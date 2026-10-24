@@ -1,10 +1,14 @@
-"""tokens.json → tokens.html. tokens.json에 있는 값만 쓴다. 견본 하나 = data-token 하나 (C10).
+"""tokens.json · measure.md → tokens.html.
+
+- 토큰 구역: tokens.json에 있는 값만 쓴다. 견본 하나 = data-token 하나 (C10)
+- 컴포넌트 구역: measure.md §6 값 칸만으로 그린다 (scripts/components.py, C19)
 
 사용: python scripts/build_html.py <run>   (보통은 write_run.py --render가 부른다)
 """
 import html
 import sys
 
+import components
 from lib import load_json, load_run, run_dir, src_label, utf8_io, write_text
 from tokens import leaves
 
@@ -70,11 +74,13 @@ def render(d) -> str:
                     cards.append(swatch(title, key, t, t["value"]))
         total += len(cards)
         body.append(f"<h2>{title} · {len(cards)}</h2><div class=grid>{''.join(cards) or '<p class=meta>토큰 없음</p>'}</div>")
+    comp_html, n_fig, n_empty = components.render(d)
+    body.append(f"<h2>컴포넌트 · 견본 {n_fig} · 빈 자리 {n_empty}</h2>{comp_html}")
     return ("<!doctype html><html lang=ko><head><meta charset=utf-8>"
             "<meta name=viewport content='width=device-width,initial-scale=1'>"
-            f"<title>{html.escape(run['service'])} 토큰 견본</title><style>{CSS}</style></head><body><main>"
-            f"<h1>{html.escape(run['run'])} 토큰 견본</h1>"
-            f"<p class=meta>tokens.json에서 스크립트로 생성 · 견본 {total}개 · 점선 = 〔추정〕</p>"
+            f"<title>{html.escape(run['service'])} 디자인 시스템</title><style>{CSS}{components.CSS}</style></head><body><main>"
+            f"<h1>{html.escape(run['run'])} 디자인 시스템</h1>"
+            f"<p class=meta>스크립트로 생성 — 토큰은 tokens.json, 컴포넌트는 measure.md §6 · 토큰 견본 {total}개 · 점선 = 〔추정〕 · 빈 자리 = 못 잼 · 해당 없음</p>"
             + "".join(body) + "</main></body></html>\n")
 
 

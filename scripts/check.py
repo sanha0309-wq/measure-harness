@@ -4,13 +4,17 @@
 차단 0 → 「승인 대기」 + approval.md 양식. 차단 있으면 retries.check_to_organize +1 → 「정리 중」 (종료 코드 1),
 한도를 넘으면 「점검 중」에 멈춤 (종료 코드 4).
 """
+import datetime as dt
+import html
+import json
 import re
 import sys
 
 import approval
 import compare
+import components
 import pixel
-from lib import (GATE_FAIL, ID_RE, OK, REFS_LOG, STOP, atoms, blocks, dump_json, gap_rows, kind_of, load_json, load_run,
+from lib import (GATE_FAIL, ID_RE, OK, REFS_LOG, STOP, atoms, locked_at, blocks, sha256, dump_json, gap_rows, kind_of, load_json, load_run,
                  load_yaml, measured_ids, parse_color, parts, read_text, rules, run_dir, save_run, service_names,
                  set_status, require_status, template, utf8_io)
 from tokens import swatch_keys
@@ -171,6 +175,39 @@ def check(d) -> list[dict]:
     if len(shown) != len(keys) or set(shown) != set(keys):
         hit("C10", "tokens.html", f"견본 {len(shown)} · 토큰 {len(keys)} · 없는 키 {sorted(set(shown) - set(keys))[:3]}")
 
+    # C19 — tokens.html 컴포넌트 견본 = measure.md §6 값
+    page = html.unescape  # data-vals · style은 escape되어 있다
+    mv = components.measure_values(d)
+    figs = re.findall(r'<figure class="cs-wrap[^"]*" data-vals="([^"]*)">(.*?)</figure>', read_text(d / "tokens.html"), re.S)
+    drawn = set()
+    for vals_s, inner in figs:
+        used = json.loads(page(vals_s))
+        pool = {"colors": [], "nums": []}
+        for iid, val in used.items():
+            drawn.add(iid)
+            want = mv.get(iid, ("", ""))[0]
+            if val != want:
+                hit("C19", iid, f"견본 값 {val!r} ≠ measure.md {want!r}")
+            a = atoms(val)
+            pool["colors"] += a["colors"]
+            pool["nums"] += a["nums"]
+        for st in re.findall(r'style="([^"]*)"', inner):
+            a = atoms(page(st))
+            extra = [c for c in a["colors"] if c not in pool["colors"]] + [n for n in a["nums"] if n not in pool["nums"]]
+            if extra:
+                hit("C19", ",".join(used) or "tokens.html", f"견본 style에 measure.md에 없는 값 {extra[:3]}")
+    empties = set(re.findall(r'data-empty="([^"]+)"', read_text(d / "tokens.html")))
+    for key, _, props in components.components():
+        for iid, _ in props.values():
+            val = mv.get(iid, ("", ""))[0]
+            unmeasured = not val or components.EMPTY_RE.match(val)
+            if unmeasured and iid in drawn:
+                hit("C19", iid, "못 잼 · 해당 없음인데 견본에 그려짐")
+            elif unmeasured and iid not in empties:
+                hit("C19", iid, "못 잼 · 해당 없음인데 빈 자리 없음")
+            elif not unmeasured and iid not in drawn:
+                hit("C19", iid, "값이 있는데 견본에 없음")
+
     # C11 · C15 · W4 — compare.md
     rs = compare.rows(d)
     written = re.findall(r"^\| `([^`]+)` \|.*\| ([^|]+) \|[^|]*\|$", read_text(d / "compare.md"), re.M)
@@ -194,12 +231,24 @@ def check(d) -> list[dict]:
             hit("C12", str(p.relative_to(d)), "raw/captures/ 밖 이미지")
 
     # C18 — refs/ 접근 (guard 훅 기록)
+    # 생성 ≤ 시각 < 처음 잠긴 때(첫 「승인 대기」)면 센다. always_count 에이전트의 줄은 생성 뒤면 언제든 센다
+    ra = r["refs_access"]
     log = REFS_LOG
-    since = load_run(d).get("created_at", "")
+    since, until = load_run(d).get("created_at", ""), locked_at(d)
     if log.exists():
         for line in read_text(log).splitlines():
-            if line.split("\t")[0] >= since:
-                hit("C18", "refs/", line.split("\t", 1)[-1][:80])
+            f = line.split("\t")
+            stamp, actor = f[0], (f[3] if len(f) > 3 else ra["legacy_actor"])
+            if stamp >= since and (actor in ra["always_count"] or until is None or stamp < until):
+                hit("C18", "refs/", f"{actor} · " + "\t".join(f[1:3])[:80])
+
+    # C20 — 다시 연 run: 값 파일은 reopen 전 승인 해시 그대로
+    reopened = load_run(d).get("reopened") or []
+    if reopened:
+        before = reopened[-1].get("approved_hashes") or {}
+        for n in r["reopen"]["locked"]:
+            if not (d / n).exists() or sha256(d / n) != before.get(n):
+                hit("C20", n, "reopen 전 승인 해시와 다름" if before.get(n) else "reopen 전 승인 해시 없음")
 
     # W1 — 값 칸 문구 원문 의심
     run_re = re.compile(r"[가-힣A-Za-z][가-힣A-Za-z ]{%d,}[가-힣A-Za-z]" % (r["thresholds"]["quote_run_chars"] - 1))
@@ -253,6 +302,10 @@ def main() -> int:
     if not blk:
         set_status(d, "승인 대기")
         approval.ensure(d)
+        data = load_run(d)
+        if not data.get("locked_at"):  # 처음 해시가 기록된 때만 — C18 구간의 끝. reopen 뒤에도 바꾸지 않는다
+            data["locked_at"] = locked_at(d) or dt.datetime.now().isoformat(timespec="seconds")  # 옛 run은 첫 approval 생성 시각
+            save_run(d, data)
         print(f"다음: 사람이 runs/{d.name}/approval.md 확인 · 서명 → finalize.py")
         return OK
     data["retries"]["check_to_organize"] += 1

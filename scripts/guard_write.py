@@ -27,11 +27,12 @@ def first_part(root: str, path: str) -> str:
     return rel.replace("\\", "/").split("/")[0], rel
 
 
-def log_access(root: str, tool: str, what: str) -> None:
+def log_access(root: str, tool: str, what: str, actor: str) -> None:
+    """한 줄 = 시각 · 도구 · 대상 · 누가 (에이전트면 agent_type, 메인 세션이면 main). 이 칸이 없는 옛 줄은 main으로 본다."""
     log = os.path.join(root, ".claude", "refs-access.log")
     stamp = dt.datetime.now().isoformat(timespec="seconds")
     with open(log, "a", encoding="utf-8") as f:
-        f.write(f"{stamp}\t{tool}\t{' '.join(what.split())[:200]}\n")  # 한 줄 한 건 — 명령의 줄바꿈 · 탭은 공백으로
+        f.write(f"{stamp}\t{tool}\t{' '.join(what.split())[:200]}\t{actor}\n")  # 명령의 줄바꿈 · 탭은 공백으로
 
 
 def main() -> int:
@@ -44,6 +45,7 @@ def main() -> int:
     tool = event.get("tool_name", "")
     ti = event.get("tool_input") or {}
     root = os.environ.get("CLAUDE_PROJECT_DIR") or event.get("cwd") or os.getcwd()
+    actor = event.get("agent_type") or "main"  # 서브에이전트 안에서 불리면 훅 입력에 agent_type이 온다
 
     if tool in WRITE_TOOLS:
         path = ti.get("file_path") or ti.get("notebook_path")
@@ -59,14 +61,14 @@ def main() -> int:
         for c in cands:
             first, rel = first_part(root, c) if not c.startswith("*") else (c.split("/")[0], c)
             if first == "refs" or "refs/" in c.replace("\\", "/"):
-                log_access(root, tool, c)
+                log_access(root, tool, c, actor)
                 print(f"막음: {c} — refs/는 R8 채점용으로 스크립트만 읽는다 (CLAUDE.md §1-7).", file=sys.stderr)
                 return 2
 
     if tool in SHELL_TOOLS:
         cmd = ti.get("command") or ""
         if SHELL_PATH.search(cmd) or SHELL_DIR.search(cmd):
-            log_access(root, tool, cmd)
+            log_access(root, tool, cmd, actor)
             print("막음: 명령에 refs/가 들어 있다 — refs/는 R8 채점용으로 스크립트(verify_refs.py)만 읽는다 (CLAUDE.md §1-7).", file=sys.stderr)
             return 2
     return 0

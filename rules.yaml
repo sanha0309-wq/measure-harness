@@ -105,7 +105,9 @@ gates:
     - { id: C15, level: block, desc: "〔추정〕 출처 행의 판단이 「채택 후보」" }
     - { id: C16, level: block, desc: "label이 thresholds.label_max_chars자를 넘음 (긴 본문 옮김)" }
     - { id: C17, level: block, desc: "label이 raw JSON의 그 el 글자 앞부분으로 시작하지 않음 (또는 el 없이 label만 있음)" }
-    - { id: C18, level: block, desc: "run을 만든 뒤 Claude가 refs/를 읽으려 함 (guard 훅이 막고 .claude/refs-access.log에 남긴 줄)" }
+    - { id: C18, level: block, desc: "run을 만든 뒤 값이 처음 잠기기(첫 「승인 대기」) 전에 Claude가 refs/를 읽으려 함 — refs_access.always_count 에이전트는 시점과 상관없이 (guard 훅이 막고 .claude/refs-access.log에 남긴 줄)" }
+    - { id: C19, level: block, desc: "tokens.html 컴포넌트 견본이 measure.md §6과 다름 (data-vals ≠ 값 칸, style에 값에 없는 수 · 색, 못 잼 · 해당 없음을 그림 / 빈 자리 없음, 잰 값이 견본에 없음)" }
+    - { id: C20, level: block, desc: "다시 연(reopen) run의 reopen.locked 파일 해시가 reopen 전 승인 해시와 다름 — 값은 그대로, 그림만 다시 그렸다는 증명" }
     - { id: W1,  level: warn,  desc: "값 칸에 글자가 thresholds.quote_run_chars자 넘게 이어짐 (문구 원문 의심, label의 「」 안은 세지 않음)" }
     - { id: W2,  level: warn,  desc: "못 잼 비율 > thresholds.unmeasured_ratio" }
     - { id: W3,  level: warn,  desc: "추정 비율 > thresholds.estimated_ratio" }
@@ -119,6 +121,14 @@ gates:
       - 캡처 이미지가 커밋 대상이 아님을 확인했다
     require: [all_checked, approver, date, hashes_match]
     hashed: [measure.md, tokens.json, tokens.html, compare.md, gaps.md, corrections.md, check-report.json]
+
+refs_access:                    # C18 — .claude/refs-access.log 세는 법
+  window: created_to_first_lock       # run.yaml created_at ≤ 시각 < locked_at (처음 「승인 대기」 = approval.md에 해시를 처음 기록한 때, 값이 잠김). 없으면 끝 없음
+  always_count: [measurer, judge]     # 이 에이전트의 줄은 시점과 상관없이 (created_at 뒤면) 센다
+  legacy_actor: main                  # 누가 칸이 없는 옛 줄
+
+reopen:                         # scripts/reopen.py · C20
+  locked: [measure.md, tokens.json]   # 다시 찍어도 바뀌면 안 되는 파일 (값). tokens.html 등 그림은 바뀌어도 된다
 
 commit_block:                   # scripts/precommit.py — 스테이징되면 커밋 거부
   image_ext: [.png, .jpg, .jpeg, .webp, .gif, .bmp, .heic]

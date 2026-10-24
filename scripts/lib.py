@@ -4,6 +4,7 @@
 """
 from __future__ import annotations
 
+import datetime as dt
 import fnmatch
 import hashlib
 import io
@@ -112,6 +113,29 @@ def run_dir(run: str) -> Path:
 
 def load_run(d: Path) -> dict:
     return load_yaml(d / "run.yaml")
+
+
+def locked_at(d: Path) -> str | None:
+    """값이 처음 해시로 잠긴 시각 = 처음 「승인 대기」에 들어가 approval.md에 해시를 기록한 때. check.py가 run.yaml locked_at에 남긴다.
+    그 칸이 생기기 전 run은 첫 approval 파일(reopen이 옆에 옮겨 둔 것, 없으면 approval.md)의 생성 시각,
+    approval 파일이 없으면 check-report.json 수정 시각으로 대신한다."""
+    data = load_run(d)
+
+    def iso(ts):
+        return dt.datetime.fromtimestamp(ts).isoformat(timespec="seconds")
+
+    # approval 파일은 처음 잠길 때 만들어진다 → 생성 시각이 잠금의 증거. 적힌 값과 둘 중 이른 쪽
+    kept = [d / r["approval_kept"] for r in data.get("reopened") or [] if r.get("approval_kept")]
+    seen = [data["locked_at"]] if data.get("locked_at") else []
+    for p in kept + [d / "approval.md"]:
+        if p.exists():
+            st = p.stat()
+            seen.append(iso(getattr(st, "st_birthtime", None) or st.st_ctime))  # Windows의 st_ctime = 생성 시각
+            break
+    if seen:
+        return min(seen)
+    rep = d / "check-report.json"  # 다시 연 옛 run만 — 새 run의 점검 실패 보고서는 잠금이 아니다
+    return iso(rep.stat().st_mtime) if data.get("reopened") and rep.exists() else None
 
 
 def save_run(d: Path, data: dict) -> None:

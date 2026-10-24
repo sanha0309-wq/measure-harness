@@ -21,7 +21,8 @@
     return rect.bottom > 0 && rect.right > 0 && rect.top < innerHeight && rect.left < innerWidth;
   }
 
-  window.measure = function (screen) {
+  // opts.returnJson — copy() 대신 JSON 문자열을 돌려준다 (scripts/collect.py). 재는 로직은 같다
+  window.measure = function (screen, opts) {
     if (!screen) throw new Error("measure('<화면 이름>')처럼 화면 이름을 넣어 주세요");
     const elements = [];
     let seen = 0;
@@ -55,6 +56,7 @@
       elements: elements,
     };
     const json = JSON.stringify(out);
+    if (opts && opts.returnJson) return json;
     if (typeof copy === "function") {
       copy(json);
       console.log("복사됨 → raw/dom-" + screen + ".json에 붙여 넣기 (요소 " + elements.length + "/" + seen + ")");

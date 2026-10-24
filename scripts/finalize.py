@@ -2,10 +2,11 @@
 
 사용: python scripts/finalize.py <run>
 """
+import datetime as dt
 import sys
 
 import approval
-from lib import GATE_FAIL, OK, require_status, run_dir, set_status, utf8_io
+from lib import GATE_FAIL, OK, load_run, require_status, run_dir, save_run, set_status, utf8_io
 
 
 def main() -> int:
@@ -19,6 +20,10 @@ def main() -> int:
         print("「승인 대기」에 머문다")
         return GATE_FAIL
     set_status(d, "완료")
+    data = load_run(d)
+    if not data.get("approved_at"):  # 첫 승인 시각 (기록용). C18 구간의 끝은 이것이 아니라 locked_at
+        data["approved_at"] = dt.datetime.now().isoformat(timespec="seconds")
+        save_run(d, data)
     print(f"완료: {d.name}")
     return OK
 

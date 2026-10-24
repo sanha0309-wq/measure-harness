@@ -77,6 +77,18 @@ def drop_line(path: Path, start: str):
     path.write_text("".join(x for x in lines if not x.startswith(start)), encoding="utf-8", newline="\n")
 
 
+def sign(d: Path):
+    s = (d / "approval.md").read_text(encoding="utf-8").replace("- [ ]", "- [x]").replace("승인자: ", "승인자: 시험").replace("날짜: ", "날짜: 2026-10-23")
+    (d / "approval.md").write_text(s, encoding="utf-8")
+
+
+def log_line(t: Path, rest: str):
+    """시험용 refs-access.log에 지금 시각으로 한 줄 (도구 · 대상 · 누가)."""
+    import datetime as dt
+    with (t / "refs.log").open("a", encoding="utf-8") as f:
+        f.write(f"{dt.datetime.now().isoformat(timespec='seconds')}\t{rest}\n")
+
+
 # (이름, 블록 또는 파일 고치기, 기대 차단 {규칙: 개수})
 CASES = [
     ("정상", None, {}),
@@ -96,6 +108,8 @@ CASES = [
     ("basis에 서비스 이름", block([{"id": "space.section_gap", "value": 32, "src": "est", "basis": "demo-sample 섹션 여백에서 계산"}]), {"C14": 1}),
     ("label 20자 넘음", block([dict(GOLDV["comp.modal.width"], label="가상 안내 이 글은 하네스가 실측 문서로 옮기면")]), {"C16": 1}),
     ("label이 el 글자와 다름", block([dict(GOLDV["comp.input.height"], label="저장")]), {"C17": 1}),
+    ("컴포넌트 견본 값 손으로 고침", lambda d: edit(d / "tokens.html", "height:44px", "height:45px"), {"C19": 1}),
+    ("못 잼 칸의 빈 자리 지움", lambda d: edit(d / "tokens.html", 'data-empty="', 'data-gone="'), {"C19": 1}),
     ("refs 접근 기록", lambda d: (d.parent.parent / "refs.log").write_text("2999-01-01T00:00:00\tRead\trefs/x.md\n", encoding="utf-8"), {"C18": 1}),
 ]
 
@@ -145,6 +159,19 @@ def main() -> int:
     env = base_run(t, bom_raw)
     record("BOM 붙은 raw", {}, check(env, t / "runs" / RUN)[1])
 
+    # collect.py (Playwright · 설치된 Chrome)로 수집 → ingest 통과 → 모범 블록 86개 · C7 0 · 차단 0
+    t = tmp / "collect"
+    env = make_env(t)
+    sh(["scripts/new_run.py", "demo-sample", "--date", "2026-10-23"], env)
+    d = t / "runs" / RUN
+    c1, out1 = sh(["scripts/collect.py", RUN, "home", "fixtures/sample.html"], env)
+    c2 = sh(["scripts/write_run.py", RUN, "--from", "measurer"], env, GOLD.read_text(encoding="utf-8"))[0]
+    sh(["scripts/pixel.py", RUN], env)
+    sh(["scripts/write_run.py", RUN, "--render"], env)
+    _, got, rep = check(env, d)
+    record("collect.py로 수집 (모범 블록 · C7 · 차단)", (0, 0, 86, 0, {}),
+           (c1, c2, len(GOLDV), rep["counts"].get("C7", 0), got), "" if c1 == 0 else out1[-300:])
+
     # guard 훅 — Bash 명령에 refs/ 경로 → 2 + refs-access.log 한 줄, verify_refs.py 실행 → 0 · 기록 없음
     t = tmp / "guard"
     (t / ".claude").mkdir(parents=True)
@@ -182,13 +209,60 @@ def main() -> int:
     d = t / "runs" / RUN
     check(env, d)
     a1 = sh(["scripts/finalize.py", RUN], env)[0]
-    s = (d / "approval.md").read_text(encoding="utf-8").replace("- [ ]", "- [x]").replace("승인자: ", "승인자: 시험").replace("날짜: ", "날짜: 2026-10-23")
-    (d / "approval.md").write_text(s, encoding="utf-8")
+    sign(d)
     edit(d / "gaps.md", "못 잼 8", "못 잼 8 ")
     a2 = sh(["scripts/finalize.py", RUN], env)
     edit(d / "gaps.md", "못 잼 8 ", "못 잼 8")
     a3 = sh(["scripts/finalize.py", RUN], env)[0]
     record("승인 (체크 없음 / 승인 뒤 바뀜 / 정상)", (1, 1, 0), (a1, a2[0], a3), "· 해시 다름 잡힘" if "해시" in a2[1] else "")
+
+    # 다시 열기 — 완료 → 정리 중, 다시 찍고 점검 → 승인 대기 (이전 서명은 새 양식으로 지워짐)
+    # 첫 승인 뒤 메인 세션의 refs 접근은 C18로 세지 않는다
+    log_line(t, "Read\trefs/x-home.md\tmain")
+    r1 = sh(["scripts/reopen.py", RUN, "시험"], env)[0]
+    r2 = sh(["scripts/write_run.py", RUN, "--render"], env)[0]
+    r3, b3, _ = check(env, d)
+    st = yaml.safe_load((d / "run.yaml").read_text(encoding="utf-8"))
+    signed = "승인자: 시험" in (d / "approval.md").read_text(encoding="utf-8")
+    record("다시 열기 (reopen · render · check · 서명 남음)", (0, 0, 0, "승인 대기", 1, False),
+           (r1, r2, r3, st["status"], len(st.get("reopened") or []), signed))
+    record("첫 승인 뒤 메인 세션 refs 접근은 안 걸림", {}, b3)
+
+    def approved_then_reopened(name):
+        t = tmp / name
+        env = base_run(t, raw)
+        d = t / "runs" / RUN
+        check(env, d)
+        sign(d)
+        sh(["scripts/finalize.py", RUN], env)
+        return t, env, d
+
+    # 잠긴 뒤(승인 대기) · 승인 전 메인 세션 접근은 세지 않는다
+    t = tmp / "locked-main"
+    env = base_run(t, raw)
+    d = t / "runs" / RUN
+    check(env, d)
+    locked = bool(yaml.safe_load((d / "run.yaml").read_text(encoding="utf-8")).get("locked_at"))
+    log_line(t, "Read\trefs/x-home.md\tmain")
+    sign(d)
+    sh(["scripts/finalize.py", RUN], env)
+    sh(["scripts/reopen.py", RUN, "시험"], env)
+    sh(["scripts/write_run.py", RUN, "--render"], env)
+    record("잠긴 뒤 · 승인 전 메인 세션 refs 접근은 안 걸림 (locked_at 기록)", ({}, True), (check(env, d)[1], locked))
+
+    # 첫 승인 뒤라도 measurer · judge의 접근은 센다
+    t, env, d = approved_then_reopened("reopen-agent")
+    log_line(t, "Read\trefs/x-home.md\tmeasurer")
+    sh(["scripts/reopen.py", RUN, "시험"], env)
+    sh(["scripts/write_run.py", RUN, "--render"], env)
+    record("첫 승인 뒤 measurer refs 접근은 걸림", {"C18": 1}, check(env, d)[1])
+
+    # 다시 연 run에서 measure.md가 바뀌면 C20
+    t, env, d = approved_then_reopened("reopen-c20")
+    sh(["scripts/reopen.py", RUN, "시험"], env)
+    sh(["scripts/write_run.py", RUN, "--render"], env)
+    (d / "measure.md").write_text((d / "measure.md").read_text(encoding="utf-8") + "\n", encoding="utf-8", newline="\n")
+    record("reopen 뒤 measure.md 바뀜", {"C20": 1}, check(env, d)[1])
 
     shutil.rmtree(tmp, ignore_errors=True)
     print(f"\n시험 {len(results)} · 통과 {sum(results)} · 실패 {len(results) - sum(results)}")
