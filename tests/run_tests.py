@@ -138,6 +138,13 @@ def main() -> int:
     judge_case(env, t / "runs" / RUN)
     record("추정 행이 채택 후보", {"C15": 1}, check(env, t / "runs" / RUN)[1])
 
+    # BOM 붙은 raw (Windows 메모장 · PowerShell 저장) → 수집 통과, 점검 차단 0
+    t = tmp / "bom"
+    bom_raw = tmp / "raw-home-bom.json"
+    bom_raw.write_bytes(b"\xef\xbb\xbf" + raw.read_bytes())
+    env = base_run(t, bom_raw)
+    record("BOM 붙은 raw", {}, check(env, t / "runs" / RUN)[1])
+
     # 블록 자체를 못 읽음 → 3, 한 번 더 → 4 (retry.block_parse 1)
     t = tmp / "parse"
     env = base_run(t, raw)

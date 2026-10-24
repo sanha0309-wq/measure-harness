@@ -7,7 +7,7 @@ import json
 import sys
 
 from build_snippet import config
-from lib import GATE_FAIL, OK, STOP, dump_json, load_run, load_yaml, read_text, rules, run_dir, save_run, set_status, require_status, utf8_io
+from lib import GATE_FAIL, OK, STOP, dump_json, load_json, load_run, load_yaml, rules, run_dir, save_run, set_status, require_status, utf8_io
 
 KEYS = {"snippet", "configHash", "screen", "url", "viewport", "dpr", "measuredAt", "truncated", "elements"}
 
@@ -26,7 +26,7 @@ def check(d) -> list[dict]:
 
     for name, p in files.items():
         try:
-            raw = json.loads(read_text(p))
+            raw = load_json(p)
         except json.JSONDecodeError as e:
             hit("I1", p.name, f"JSON 아님: {e}")
             continue

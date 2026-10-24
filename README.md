@@ -73,7 +73,11 @@ captures:                                        # 앱 · 로그인 화면 등 D
 2. 개발자 도구(F12) → 기기 툴바(Ctrl+Shift+M) → 「반응형」에서 폭을 **1440**으로 맞춥니다. 화면 폭이 1440이 아니면 수집 단계에서 차단됩니다 (I2)
 3. Console 탭에 `snippet/measure.js` 전체를 붙여 넣고 Enter. 처음이면 크롬이 붙여 넣기를 막는데, 안내대로 `allow pasting`을 입력한 뒤 다시 붙여 넣습니다
 4. `measure('home')` 실행 → 결과 JSON이 클립보드에 복사됩니다
-5. `runs/<run>/raw/dom-home.json` 파일을 만들어 붙여 넣습니다
+5. `runs/<run>/raw/dom-home.json` 파일을 만들어 붙여 넣습니다. Windows에서는 저장소 폴더의 PowerShell에서 클립보드를 그대로 BOM 없는 UTF-8로 저장할 수 있습니다:
+   ```powershell
+   [IO.File]::WriteAllText("$PWD\runs\<run>\raw\dom-home.json", (Get-Clipboard -Raw), (New-Object Text.UTF8Encoding $false))
+   ```
+   Windows PowerShell 5.1의 `Set-Content -Encoding utf8` · `Out-File`과 메모장은 BOM을 붙입니다. 수집 단계는 BOM이 있어도 읽지만, 위 명령을 쓰면 BOM이 붙지 않습니다. 위 명령은 터미널에 붙여 넣어 실행하는 것이고, JSON 파일 안에 붙여 넣는 것이 아닙니다
 6. 아래쪽을 재려면 스크롤한 뒤 `measure('home-2')`처럼 다른 화면 이름으로 다시 실행합니다 (스니펫은 화면에 보이는 요소만 담습니다)
 
 `snippet/measure.js`는 생성된 파일입니다. 고치려면 `snippet/measure.src.js` 또는 `rules.yaml`을 고치고 `build_snippet.py`를 다시 돌립니다.

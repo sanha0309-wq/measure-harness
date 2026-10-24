@@ -52,7 +52,8 @@ def dump_yaml(p: Path, data) -> None:
 
 
 def load_json(p: Path):
-    return json.loads(read_text(p))
+    # utf-8-sig — Windows 메모장 · PowerShell로 저장한 raw는 BOM이 붙는다. BOM 없는 파일은 utf-8과 같게 읽힌다
+    return json.loads(io.open(p, encoding="utf-8-sig").read())
 
 
 def dump_json(p: Path, data) -> None:
