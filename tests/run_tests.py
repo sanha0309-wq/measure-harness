@@ -145,6 +145,18 @@ def main() -> int:
     env = base_run(t, bom_raw)
     record("BOM 붙은 raw", {}, check(env, t / "runs" / RUN)[1])
 
+    # guard 훅 — Bash 명령에 refs/ 경로 → 2 + refs-access.log 한 줄, verify_refs.py 실행 → 0 · 기록 없음
+    t = tmp / "guard"
+    (t / ".claude").mkdir(parents=True)
+    genv = dict(os.environ, CLAUDE_PROJECT_DIR=str(t))
+    def guard(cmd):
+        ev = json.dumps({"tool_name": "Bash", "tool_input": {"command": cmd}})
+        return subprocess.run([PY, "scripts/guard_write.py"], cwd=ROOT, env=genv, input=ev, capture_output=True, text=True, encoding="utf-8").returncode
+    g1, g2 = guard("cat refs/x-home.md"), guard(f"python scripts/verify_refs.py {RUN}")
+    glog = t / ".claude" / "refs-access.log"
+    lines = glog.read_text(encoding="utf-8").splitlines() if glog.exists() else []
+    record("Bash로 refs 읽기 막음 · 기록", (2, 0, 1), (g1, g2, sum("\tBash\t" in x for x in lines)))
+
     # 블록 자체를 못 읽음 → 3, 한 번 더 → 4 (retry.block_parse 1)
     t = tmp / "parse"
     env = base_run(t, raw)

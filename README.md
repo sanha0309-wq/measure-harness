@@ -113,7 +113,7 @@ rules.yaml                 규칙 · 수치 · 횟수 · 토큰 대응 — 전�
 docs/                      기준 문서 (PRD · 스토리 · 파이프라인 · 산출물 형식 · 실측 템플릿 · 우리 예시 값)
 .claude/agents/            measurer · judge (Read · Glob · Grep만)
 .claude/commands/measure.md  /measure
-.claude/settings.json      훅 — runs/ · refs/ 쓰기 금지, refs/ 읽기 금지
+.claude/settings.json      훅 — runs/ · refs/ 쓰기 금지, refs/ 읽기 금지 (Bash · PowerShell 명령 포함)
 scripts/                   new_run · ingest · write_run · pixel · check · finalize · build_snippet · precommit …
 snippet/                   콘솔 스니펫 (measure.src.js → measure.js)
 fixtures/                  가상 견본 페이지 + 정답
