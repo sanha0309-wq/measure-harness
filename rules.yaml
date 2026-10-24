@@ -108,6 +108,7 @@ gates:
     - { id: C18, level: block, desc: "run을 만든 뒤 값이 처음 잠기기(첫 「승인 대기」) 전에 Claude가 refs/를 읽으려 함 — refs_access.always_count 에이전트는 시점과 상관없이 (guard 훅이 막고 .claude/refs-access.log에 남긴 줄)" }
     - { id: C19, level: block, desc: "tokens.html 컴포넌트 견본이 measure.md §6과 다름 (data-vals ≠ 값 칸, style에 값에 없는 수 · 색, 못 잼 · 해당 없음을 그림 / 빈 자리 없음, 잰 값이 견본에 없음)" }
     - { id: C20, level: block, desc: "다시 연(reopen) run의 reopen.locked 파일 해시가 reopen 전 승인 해시와 다름 — 값은 그대로, 그림만 다시 그렸다는 증명" }
+    - { id: C21, level: block, desc: "screen.html 요소 수 · 순서 · 위치 · 값 · 글자가 raw와 다름 (scripts/replay.py가 raw만 옮김)" }
     - { id: W1,  level: warn,  desc: "값 칸에 글자가 thresholds.quote_run_chars자 넘게 이어짐 (문구 원문 의심, label의 「」 안은 세지 않음)" }
     - { id: W2,  level: warn,  desc: "못 잼 비율 > thresholds.unmeasured_ratio" }
     - { id: W3,  level: warn,  desc: "추정 비율 > thresholds.estimated_ratio" }
@@ -148,6 +149,12 @@ refs_compare:                   # 하네스 검증 기준 (R8, 1회) — scripts
     missing_source: 0
     coverage: 0.80
   arbitrary: [toc_match, missing_source, coverage]
+
+replay:                         # scripts/replay.py → screen.html · C21
+  props: [background-color, color, border-radius, box-shadow, font-size, font-weight]   # rect 말고 옮기는 raw 스타일. 없으면 쓰지 않는다
+  placeholder_tags: [img, svg, picture, video, canvas, iframe]   # 이 태그와 그 안쪽 요소는 자리 상자
+  placeholder_color: "#D9D9D9"    # 자리 상자 색 (raw 값이 아님)
+  arbitrary: [placeholder_tags, placeholder_color]
 
 judge:
   allowed: [채택 후보, 유지, 보류]

@@ -2,7 +2,7 @@
 
 사용:
   python scripts/write_run.py <run> --from measurer   < 블록   (값 · 좌표 · 규칙. 실패 항목만 와도 ID로 덮어 합침)
-  python scripts/write_run.py <run> --render                  (measure.md · tokens.json · gaps.md · tokens.html · compare.md · corrections.md)
+  python scripts/write_run.py <run> --render                  (measure.md · tokens.json · gaps.md · tokens.html · compare.md · screen.html · corrections.md)
   python scripts/write_run.py <run> --from judge      < 블록   (판단 → compare.md 다시 찍기)
 블록을 읽지 못하면 종료 코드 3 (retry.block_parse), 한도를 넘으면 4.
 """
@@ -18,6 +18,7 @@ from lib import (BLOCK_PARSE, ID_RE, OK, STOP, TEMPLATE, blocks, dump_json, dump
 import build_html
 import compare
 import diff_prev
+import replay
 import tokens as tokens_mod
 
 
@@ -213,12 +214,13 @@ def render_all(d) -> int:
     render_gaps(d)
     write_text(d / "tokens.html", build_html.render(d))
     render_compare(d)
+    write_text(d / "screen.html", replay.render(d))
     cor = diff_prev.render(d)
     if cor:
         write_text(d / "corrections.md", cor)
     elif (d / "corrections.md").exists():
         (d / "corrections.md").unlink()
-    print("찍음: measure.md · tokens.json · gaps.md · tokens.html · compare.md" + (" · corrections.md" if cor else ""))
+    print("찍음: measure.md · tokens.json · gaps.md · tokens.html · compare.md · screen.html" + (" · corrections.md" if cor else ""))
     return OK
 
 

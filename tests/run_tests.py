@@ -77,6 +77,12 @@ def drop_line(path: Path, start: str):
     path.write_text("".join(x for x in lines if not x.startswith(start)), encoding="utf-8", newline="\n")
 
 
+def drop_last(path: Path, start: str):
+    lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
+    i = max(i for i, x in enumerate(lines) if x.startswith(start))
+    path.write_text("".join(lines[:i] + lines[i + 1:]), encoding="utf-8", newline="\n")
+
+
 def sign(d: Path):
     s = (d / "approval.md").read_text(encoding="utf-8").replace("- [ ]", "- [x]").replace("승인자: ", "승인자: 시험").replace("날짜: ", "날짜: 2026-10-23")
     (d / "approval.md").write_text(s, encoding="utf-8")
@@ -110,6 +116,8 @@ CASES = [
     ("label이 el 글자와 다름", block([dict(GOLDV["comp.input.height"], label="저장")]), {"C17": 1}),
     ("컴포넌트 견본 값 손으로 고침", lambda d: edit(d / "tokens.html", "height:44px", "height:45px"), {"C19": 1}),
     ("못 잼 칸의 빈 자리 지움", lambda d: edit(d / "tokens.html", 'data-empty="', 'data-gone="'), {"C19": 1}),
+    ("screen.html 값 하나 고침", lambda d: edit(d / "screen.html", "px;top:", "px;top:1"), {"C21": 1}),
+    ("screen.html 마지막 요소 지움", lambda d: drop_last(d / "screen.html", '<div class="el"'), {"C21": 1}),
     ("refs 접근 기록", lambda d: (d.parent.parent / "refs.log").write_text("2999-01-01T00:00:00\tRead\trefs/x.md\n", encoding="utf-8"), {"C18": 1}),
 ]
 

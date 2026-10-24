@@ -14,6 +14,7 @@ import approval
 import compare
 import components
 import pixel
+import replay
 from lib import (GATE_FAIL, ID_RE, OK, REFS_LOG, STOP, atoms, locked_at, blocks, sha256, dump_json, gap_rows, kind_of, load_json, load_run,
                  load_yaml, measured_ids, parse_color, parts, read_text, rules, run_dir, save_run, service_names,
                  set_status, require_status, template, utf8_io)
@@ -249,6 +250,10 @@ def check(d) -> list[dict]:
         for n in r["reopen"]["locked"]:
             if not (d / n).exists() or sha256(d / n) != before.get(n):
                 hit("C20", n, "reopen 전 승인 해시와 다름" if before.get(n) else "reopen 전 승인 해시 없음")
+
+    # C21 — screen.html은 raw를 그대로 옮긴 것
+    for item, detail in replay.verify(d):
+        hit("C21", item, detail)
 
     # W1 — 값 칸 문구 원문 의심
     run_re = re.compile(r"[가-힣A-Za-z][가-힣A-Za-z ]{%d,}[가-힣A-Za-z]" % (r["thresholds"]["quote_run_chars"] - 1))

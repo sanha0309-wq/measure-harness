@@ -10,7 +10,7 @@ runs/<서비스>-<날짜>[-n]/
   input.yaml          잴 화면 · 캡처별 배율 (사람이 씀)
   raw/                dom-<화면>.json · captures/ (캡처는 커밋 안 됨)
   blocks/             에이전트 블록 · pixel.py 결과 (스크립트가 저장)
-  measure.md  tokens.json  tokens.html  compare.md  gaps.md  corrections.md
+  measure.md  tokens.json  tokens.html  compare.md  gaps.md  corrections.md  screen.html
   check-report.json  approval.md
 ```
 - 공개하는 run은 `runs/demo-sample/` 하나. 대상은 저장소 안의 가상 견본 페이지 `fixtures/sample.html`
@@ -102,3 +102,11 @@ runs/<서비스>-<날짜>[-n]/
 | 항목 | 이전 값 | 이전 출처 | 새 값 | 새 출처 | 이전 run |
 |---|---|---|---|---|---|
 - 같은 서비스의 이전 run이 있을 때만 생성. 달라진 항목만 (AC-5)
+
+## ⑧ screen.html
+- `scripts/replay.py`가 raw만으로 찍는다 (`write_run.py --render`도 함께 찍는다). AI가 HTML을 쓰지 않는다
+- raw 요소 하나 = 1440 폭 캔버스의 absolute 상자 하나. 위치 · 크기는 `rect`, 스타일은 `rules.yaml`의 `replay.props`만 raw 값 그대로. raw에 없는 속성은 쓰지 않는다
+- 글자는 자식 요소가 없는 요소에만, raw 글자 앞부분 그대로
+- 이미지 · 아이콘(`replay.placeholder_tags`와 그 안쪽 요소)은 `replay.placeholder_color` 자리 상자 (`data-placeholder`)
+- C21: 요소 수 · 순서 · 위치 · 값 · 글자가 raw와 같다. `replay.py`도 찍은 뒤 바로 센다 (상태와 상관없이 돈다)
+- 승인 해시(`gates.approval.hashed`) 대상이 아니다. 공개 run(demo-sample)만 커밋하고 실서비스 run은 비공개 (화면 문구가 들어 있다)
